@@ -31,6 +31,11 @@ const formMachine = createMachine(
       stepThree: {
         addOns: [],
       },
+      errors: {
+        name: "",
+        email: "",
+        phoneNumber: "",
+      },
     },
 
     // State definitions
@@ -49,6 +54,13 @@ const formMachine = createMachine(
           },
           NEXT: {
             actions: changeStep("up"),
+            cond: (context: any) => {
+              return (
+                context.stepOne.name !== "" &&
+                context.stepOne.email !== "" &&
+                context.stepOne.phoneNumber !== ""
+              );
+            },
             target: "stepTwo",
           },
         },

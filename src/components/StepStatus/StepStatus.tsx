@@ -1,5 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
+import BackgroundDesktop from "../../assets/images/bg-sidebar-desktop.svg";
 
 interface StepStatusProps {
   className?: string;
@@ -39,7 +40,7 @@ const StepStatusNumber = styled.div<StepStatusNumberProps>`
     props.active &&
     `background-color: ${props.theme.colors.colorSkyBlue};
     border-color: ${props.theme.colors.colorSkyBlue};
-    color: ${props.theme.colors.colorDemin};`};
+    color: ${props.theme.colors.colorDenim};`};
 `;
 
 const StepStatusInfo = styled.div`
@@ -99,7 +100,10 @@ const StepStatus = ({ className, currentStep }: StepStatusProps) => {
 const StyledStepStatus = styled(StepStatus)`
   width: 274px;
   height: 100%;
-  background-color: ${(props) => props.theme.colors.colorPurple};
+  background-image: url(${BackgroundDesktop});
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
   border-radius: 10px;
   padding: 40px 32px;
 `;

@@ -7,6 +7,7 @@ interface InputProps {
   id: string;
   type?: "text" | "email" | "phonenumber";
   value?: string;
+  error?: string;
   callback: (id: string, value: string) => void;
   className?: string;
 }
@@ -17,6 +18,7 @@ const Input = ({
   id,
   type,
   value,
+  error,
   callback,
   className,
 }: InputProps) => {
@@ -24,6 +26,7 @@ const Input = ({
 
   return (
     <div className={className}>
+      {error}
       <label htmlFor={id}>{label}</label>
       <input
         id={id}
@@ -43,16 +46,17 @@ const Input = ({
 const StyledInput = styled(Input)`
   display: inline-flex;
   flex-direction: column;
-  gap: 0.5rem;
   label {
     font-size: 14px;
+    margin-bottom: 8px;
   }
   input {
     padding: 8px 12px;
     font-size: 16px;
-    color: ${(props) => props.theme.colors.colorDemin};
+    color: ${(props) => props.theme.colors.colorDenim};
     border: 1px solid ${(props) => props.theme.colors.inputBorder};
     border-radius: 8px;
+    min-height: 48px;
     width: 100%;
     display: flex;
     &:placeholder {
