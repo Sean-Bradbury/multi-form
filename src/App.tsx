@@ -38,14 +38,13 @@ function App() {
     <ThemeProvider theme={theme}>
       <div className="App">
         <MainContainer>
-          <StepStatus />
+          <StepStatus currentStep={current.context.currentStep} />
 
           <Form
             onSubmit={() => {
               console.log("submitted");
             }}
           >
-            {current.context.currentStep}
             {current.matches("stepOne") && (
               <>
                 <TitleArea title="Hello" subtitle="World" />

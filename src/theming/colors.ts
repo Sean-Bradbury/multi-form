@@ -3,6 +3,8 @@ const colors = {
   colorDemin: "#022959",
   colorPurple: "#483EFF",
   colorRed: "#EE374A",
+  colorLightBlue: "#ABBCFF",
+  colorSkyBlue: "#BEE2FD",
   inputBorder: "#D6D9E6",
   bgLightGray: "#F8F9FF",
 };

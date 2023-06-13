@@ -1,5 +1,13 @@
 import { createMachine, assign } from "xstate";
 
+const changeStep = (direction: string) =>
+  assign((context: any, event: any) => {
+    return {
+      currentStep:
+        direction === "up" ? context.currentStep + 1 : context.currentStep - 1,
+    };
+  });
+
 const formMachine = createMachine(
   {
     // Machine identifier
@@ -40,11 +48,7 @@ const formMachine = createMachine(
             }),
           },
           NEXT: {
-            actions: assign((context: any, event: any) => {
-              return {
-                currentStep: 2,
-              };
-            }),
+            actions: changeStep("up"),
             target: "stepTwo",
           },
         },
@@ -52,26 +56,37 @@ const formMachine = createMachine(
       stepTwo: {
         on: {
           PREVIOUS: {
-            actions: assign((context: any, event: any) => {
-              return {
-                currentStep: 1,
-              };
-            }),
+            actions: changeStep("down"),
             target: "stepOne",
           },
-          NEXT: "stepThree",
+          NEXT: {
+            actions: changeStep("up"),
+            target: "stepThree",
+          },
         },
       },
       stepThree: {
         on: {
-          PREVIOUS: "stepOne",
-          NEXT: "stepThree",
+          PREVIOUS: {
+            actions: changeStep("down"),
+            target: "stepTwo",
+          },
+          NEXT: {
+            actions: changeStep("up"),
+            target: "stepFour",
+          },
         },
       },
       stepFour: {
         on: {
-          PREVIOUS: "stepOne",
-          NEXT: "stepThree",
+          PREVIOUS: {
+            actions: changeStep("down"),
+            target: "stepThree",
+          },
+          NEXT: {
+            actions: changeStep("up"),
+            target: "idle",
+          },
         },
       },
       idle: {},
