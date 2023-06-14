@@ -9,11 +9,18 @@ export interface PlanCardProps {
   icon: string;
   title: string;
   price: string;
+  onClick: (title: string) => void;
   selected?: boolean;
   className?: string;
 }
 
-const PlanCard = ({ icon, title, price, className }: PlanCardProps) => {
+const PlanCard = ({
+  icon,
+  title,
+  price,
+  className,
+  onClick,
+}: PlanCardProps) => {
   const returnedIcon = useMemo(() => {
     switch (icon) {
       case "arcade":
@@ -28,7 +35,7 @@ const PlanCard = ({ icon, title, price, className }: PlanCardProps) => {
   }, [icon]);
 
   return (
-    <div className={className}>
+    <div className={className} onClick={() => onClick(title)}>
       <img src={returnedIcon} alt={title} />
       <h3>{title}</h3>
       <span>{price}</span>
@@ -45,6 +52,7 @@ const StyledPlanCard = styled(PlanCard)`
   border: 1px solid ${(props) => props.theme.colors.inputBorder};
   padding: 20px 16px;
   width: 100%;
+  cursor: pointer;
   ${(props) =>
     props.selected &&
     `background-color: ${props.theme.colors.bgLightGray}; border: 1px solid ${props.theme.colors.colorPurple};`}

@@ -26,7 +26,7 @@ const formMachine = createMachine(
       },
       stepTwo: {
         planName: "",
-        billingType: "",
+        billingType: "Monthly",
       },
       stepThree: {
         addOns: [],
@@ -67,6 +67,26 @@ const formMachine = createMachine(
       },
       stepTwo: {
         on: {
+          SELECT_PLAN: {
+            actions: assign((context: any, event: any) => {
+              return {
+                stepTwo: {
+                  ...context.stepTwo,
+                  planName: event.planName,
+                },
+              };
+            }),
+          },
+          SELECT_BILLING: {
+            actions: assign((context: any, event: any) => {
+              return {
+                stepTwo: {
+                  ...context.stepTwo,
+                  billingType: event.billingType,
+                },
+              };
+            }),
+          },
           PREVIOUS: {
             actions: changeStep("down"),
             target: "stepOne",

@@ -5,8 +5,12 @@ import TitleArea from "../TitleArea";
 import PlanCard from "../PlanCard";
 import Container from "../Container";
 import Input from "../UI/Input";
+import Toggle from "../UI/Toggle";
 import { useMachine } from "@xstate/react";
 import formMachine from "../../machines/formState.machine";
+
+// Data
+import Plans from "../../data/plans.json";
 
 interface FormProps {
   className?: string;
@@ -38,7 +42,7 @@ interface FormContentProps {
 const FormContent = styled.div<FormContentProps>`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 30px;
   max-width: 450px;
   width: 100%;
   height: 100%;
@@ -74,7 +78,7 @@ const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
   return (
     <form onSubmit={submitHandler} className={className}>
       <FormContent step="stepOne">
-        {current.matches("stepTwo") && (
+        {current.matches("stepOne") && (
           <>
             <TitleArea
               title="Personal info"
@@ -85,7 +89,6 @@ const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
               type="text"
               label="Name"
               value={current.context.stepOne.name}
-              error={current.context.errors.name}
               callback={(property, value) => {
                 send("UPDATE_PROPERTY", {
                   value: value,
@@ -122,17 +125,36 @@ const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
             />
           </>
         )}
-        {current.matches("stepOne") && (
+        {current.matches("stepTwo") && (
           <>
             <TitleArea
               title="Select your plan"
               subtitle="You have the option of monthly or yearly billing."
             />
             <Container gap={16}>
-              <PlanCard icon="arcade" title="Arcade" price="$9/mo" selected />
-              <PlanCard icon="advanced" title="Advanced" price="$12/mo" />
-              <PlanCard icon="pro" title="Pro" price="$15/mo" />
+              {Plans.plans.map((plan) => {
+                return (
+                  <PlanCard
+                    key={plan.title}
+                    icon={plan.title.toLowerCase()}
+                    title={plan.title}
+                    price={plan.price}
+                    selected={current.context.stepTwo.planName === plan.title}
+                    onClick={(title) => {
+                      send("SELECT_PLAN", { planName: title });
+                    }}
+                  />
+                );
+              })}
             </Container>
+            <Toggle
+              leftText="Monthly"
+              rightText="Yearly"
+              billingType={current.context.stepTwo.billingType}
+              onChange={(type) => {
+                send("SELECT_BILLING", { billingType: type });
+              }}
+            />
           </>
         )}
 
@@ -160,7 +182,7 @@ const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
                 send("PREVIOUS");
               }}
               secondary={true}
-              text="Previous step"
+              text="Go Back"
             />
           )}
 
