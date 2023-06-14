@@ -2,6 +2,8 @@ import { useEffect, useMemo } from "react";
 import styled from "styled-components";
 import FormButton from "./FormButton";
 import TitleArea from "../TitleArea";
+import PlanCard from "../PlanCard";
+import Container from "../Container";
 import Input from "../UI/Input";
 import { useMachine } from "@xstate/react";
 import formMachine from "../../machines/formState.machine";
@@ -72,7 +74,7 @@ const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
   return (
     <form onSubmit={submitHandler} className={className}>
       <FormContent step="stepOne">
-        {current.matches("stepOne") && (
+        {current.matches("stepTwo") && (
           <>
             <TitleArea
               title="Personal info"
@@ -120,12 +122,17 @@ const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
             />
           </>
         )}
-        {current.matches("stepTwo") && (
+        {current.matches("stepOne") && (
           <>
             <TitleArea
               title="Select your plan"
               subtitle="You have the option of monthly or yearly billing."
             />
+            <Container gap={16}>
+              <PlanCard icon="arcade" title="Arcade" price="$9/mo" selected />
+              <PlanCard icon="advanced" title="Advanced" price="$12/mo" />
+              <PlanCard icon="pro" title="Pro" price="$15/mo" />
+            </Container>
           </>
         )}
 
