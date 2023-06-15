@@ -7,36 +7,31 @@ interface ToggleProps {
   className?: string;
   leftText: string;
   rightText: string;
-  billingType: string;
-  onChange: (type: string) => void;
+  option: string;
+  callback: (type: string) => void;
 }
 
 const Toggle = ({
   className,
   leftText,
   rightText,
-  billingType,
-  onChange,
+  option,
+  callback,
 }: ToggleProps) => {
-  const [checked, setChecked] = useState(false);
-
+  const [checked, setChecked] = useState(leftText === option ? false : true);
   const handleChange = () => {
-    setChecked((_p) => {
-      const isChecked = !_p;
-      onChange(isChecked ? rightText : leftText);
-
-      return isChecked;
-    });
+    setChecked((_p) => !_p);
+    callback(leftText === option ? rightText : leftText);
   };
 
   return (
     <div className={className}>
-      <ToggleText active={leftText === billingType} text={leftText} />
+      <ToggleText active={leftText === option} text={leftText} />
       <label>
         <input type="checkbox" checked={checked} onChange={handleChange} />
         <span></span>
       </label>
-      <ToggleText active={rightText === billingType} text={rightText} />
+      <ToggleText active={rightText === option} text={rightText} />
     </div>
   );
 };

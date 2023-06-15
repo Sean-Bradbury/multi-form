@@ -26,10 +26,10 @@ const formMachine = createMachine(
       },
       stepTwo: {
         planName: "",
-        billingType: "Monthly",
+        billingType: "",
       },
       stepThree: {
-        addOns: [],
+        addOns: [""],
       },
       errors: {
         name: "",
@@ -99,6 +99,24 @@ const formMachine = createMachine(
       },
       stepThree: {
         on: {
+          SELECT_ADDON: {
+            actions: assign((context: any, event: any) => {
+              const addOns = context.stepThree.addOns;
+              const index = addOns.indexOf(event.addonName);
+              if (index > -1) {
+                addOns.splice(index, 1);
+              } else {
+                addOns.push(event.addonName);
+              }
+
+              return {
+                stepThree: {
+                  ...context.stepThree,
+                  addOns,
+                },
+              };
+            }),
+          },
           PREVIOUS: {
             actions: changeStep("down"),
             target: "stepTwo",

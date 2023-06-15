@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import FormButton from "./FormButton";
 import TitleArea from "../TitleArea";
@@ -6,11 +6,12 @@ import PlanCard from "../PlanCard";
 import Container from "../Container";
 import Input from "../UI/Input";
 import Toggle from "../UI/Toggle";
+import Checkbox from "../UI/Checkbox";
 import { useMachine } from "@xstate/react";
 import formMachine from "../../machines/formState.machine";
 
 // Data
-import Plans from "../../data/plans.json";
+import { plans, addons } from "../../data/data";
 
 interface FormProps {
   className?: string;
@@ -19,13 +20,13 @@ interface FormProps {
 }
 
 interface FormButtonsProps {
-  oneButton?: boolean;
+  hasonebutton: boolean | string;
 }
 
 const FormButtons = styled.div<FormButtonsProps>`
   display: flex;
   justify-content: space-between;
-  justify-content: ${(props) => props.oneButton && "flex-end"};
+  justify-content: ${(props) => props.hasonebutton && "flex-end"};
   align-items: center;
   gap: 16px;
   width: 100%;
@@ -56,6 +57,13 @@ const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
         name: "",
         email: "",
         phoneNumber: "",
+      },
+      stepTwo: {
+        planName: "Arcade",
+        billingType: "Monthly",
+      },
+      stepThree: {
+        addOns: [],
       },
       errors: {
         name: "",
@@ -132,7 +140,7 @@ const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
               subtitle="You have the option of monthly or yearly billing."
             />
             <Container gap={16}>
-              {Plans.plans.map((plan) => {
+              {plans.plans.map((plan) => {
                 return (
                   <PlanCard
                     key={plan.title}
@@ -150,8 +158,8 @@ const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
             <Toggle
               leftText="Monthly"
               rightText="Yearly"
-              billingType={current.context.stepTwo.billingType}
-              onChange={(type) => {
+              option={current.context.stepTwo.billingType}
+              callback={(type) => {
                 send("SELECT_BILLING", { billingType: type });
               }}
             />
@@ -164,6 +172,22 @@ const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
               title="Pick add-ons"
               subtitle="Add-ons help enhance your gaming experience."
             />
+            {addons.addOns.map((addon) => {
+              return (
+                <Checkbox
+                  key={addon.title}
+                  title={addon.title}
+                  subtitle={addon.subtitle}
+                  price={addon.price}
+                  checked={current.context.stepThree.addOns.includes(
+                    addon.title
+                  )}
+                  onChange={(title) => {
+                    send("SELECT_ADDON", { addonName: title });
+                  }}
+                />
+              );
+            })}
           </>
         )}
         {current.matches("stepFour") && (
@@ -175,7 +199,9 @@ const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
           </>
         )}
 
-        <FormButtons oneButton={current.matches("stepOne")}>
+        <FormButtons
+          hasonebutton={current.matches("stepOne") ? "true" : "false"}
+        >
           {!current.matches("stepOne") && (
             <FormButton
               onClick={() => {

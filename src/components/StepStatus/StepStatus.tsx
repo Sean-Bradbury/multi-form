@@ -1,5 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
+import StepStatusNumber from "./StepStatusNumber";
 import BackgroundDesktop from "../../assets/images/bg-sidebar-desktop.svg";
 
 interface StepStatusProps {
@@ -18,29 +19,6 @@ const StepStatusStepGroup = styled.div`
   align-items: center;
   gap: 16px;
   color: white;
-`;
-
-interface StepStatusNumberProps {
-  active?: boolean;
-}
-
-const StepStatusNumber = styled.div<StepStatusNumberProps>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 33px;
-  height: 33px;
-  border-radius: 50%;
-  background-color: transparent;
-  border: 1px solid white;
-  font-size: 14px;
-  font-weight: 700;
-  transition: all 0.3s linear;
-  ${(props) =>
-    props.active &&
-    `background-color: ${props.theme.colors.colorSkyBlue};
-    border-color: ${props.theme.colors.colorSkyBlue};
-    color: ${props.theme.colors.colorDenim};`};
 `;
 
 const StepStatusInfo = styled.div`
@@ -65,28 +43,28 @@ const StepStatus = ({ className, currentStep }: StepStatusProps) => {
     <div className={className}>
       <StepStatusContainer>
         <StepStatusStepGroup>
-          <StepStatusNumber active={currentStep === 1}>1</StepStatusNumber>
+          <StepStatusNumber active={currentStep === 1} number={1} />
           <StepStatusInfo>
             <span>Step 1</span>
             <p>Your Info</p>
           </StepStatusInfo>
         </StepStatusStepGroup>
         <StepStatusStepGroup>
-          <StepStatusNumber active={currentStep === 2}>2</StepStatusNumber>
+          <StepStatusNumber active={currentStep === 2} number={2} />
           <StepStatusInfo>
             <span>Step 2</span>
             <p>Select Plan</p>
           </StepStatusInfo>
         </StepStatusStepGroup>
         <StepStatusStepGroup>
-          <StepStatusNumber active={currentStep === 3}>3</StepStatusNumber>
+          <StepStatusNumber active={currentStep === 3} number={3} />
           <StepStatusInfo>
             <span>Step 3</span>
             <p>Add Ons</p>
           </StepStatusInfo>
         </StepStatusStepGroup>
         <StepStatusStepGroup>
-          <StepStatusNumber active={currentStep === 4}>4</StepStatusNumber>
+          <StepStatusNumber active={currentStep === 4} number={4} />
           <StepStatusInfo>
             <span>Step 4</span>
             <p>Summary</p>
