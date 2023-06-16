@@ -50,6 +50,15 @@ const FormContent = styled.div<FormContentProps>`
   position: relative;
 `;
 
+const ConfirmContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  background-color: ${(props) => props.theme.colors.bgLightGray};
+  border-radius: 8px;
+  padding: 16px 24px;
+`;
+
 const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
   const [current, send] = useMachine(formMachine, {
     context: {
@@ -196,6 +205,9 @@ const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
               title="Finishing up"
               subtitle="Double-check everything looks OK before confirming."
             />
+            <ConfirmContent>
+              <p>oieanrstoienarsoitenarsoitenasotiearnsd</p>
+            </ConfirmContent>
           </>
         )}
 
