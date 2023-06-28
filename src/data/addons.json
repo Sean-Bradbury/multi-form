@@ -3,17 +3,20 @@
     {
       "title": "Online service",
       "subtitle": "Access to multiplayer games",
-      "price": "+$1/mo"
+      "monthlyPrice": 1,
+      "yearlyPrice": 10
     },
     {
       "title": "Larger storage",
       "subtitle": "Extra 1TB of cloud save",
-      "price": "+$2/mo"
+      "monthlyPrice": 2,
+      "yearlyPrice": 20
     },
     {
       "title": "Customizable profile",
       "subtitle": "Custom theme on your profile",
-      "price": "+$2/mo"
+      "monthlyPrice": 2,
+      "yearlyPrice": 20
     }
   ]
 }

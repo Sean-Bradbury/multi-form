@@ -1,14 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import styled from "styled-components";
 import FormButton from "./FormButton";
 import TitleArea from "../TitleArea";
 import PlanCard from "../PlanCard";
 import Container from "../Container";
+import ConfirmContent from "../ConfirmContent";
+import AddOnItem from "../AddOnItem";
 import Input from "../UI/Input";
 import Toggle from "../UI/Toggle";
 import Checkbox from "../UI/Checkbox";
 import { useMachine } from "@xstate/react";
 import formMachine from "../../machines/formState.machine";
+
+import { ConvertPriceLength } from "../../helpers/ConvertPriceLength";
 
 // Data
 import { plans, addons } from "../../data/data";
@@ -50,15 +54,6 @@ const FormContent = styled.div<FormContentProps>`
   position: relative;
 `;
 
-const ConfirmContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  background-color: ${(props) => props.theme.colors.bgLightGray};
-  border-radius: 8px;
-  padding: 16px 24px;
-`;
-
 const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
   const [current, send] = useMachine(formMachine, {
     context: {
@@ -81,6 +76,25 @@ const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
       },
     },
   });
+
+  const { planName, billingType } = current.context.stepTwo;
+  const { addOns } = current.context.stepThree;
+
+  const planPrice = useMemo(() => {
+    const matchingPlan = plans.plans.find(
+      (item) => item.title === planName
+    ) || {
+      monthlyPrice: 0,
+      yearlyPrice: 0,
+    };
+
+    return ConvertPriceLength(
+      billingType === "Monthly"
+        ? matchingPlan.monthlyPrice
+        : matchingPlan.yearlyPrice,
+      billingType
+    );
+  }, [planName, billingType]);
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -155,7 +169,12 @@ const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
                     key={plan.title}
                     icon={plan.title.toLowerCase()}
                     title={plan.title}
-                    price={plan.price}
+                    price={ConvertPriceLength(
+                      billingType === "Monthly"
+                        ? plan.monthlyPrice
+                        : plan.yearlyPrice,
+                      billingType
+                    )}
                     selected={current.context.stepTwo.planName === plan.title}
                     onClick={(title) => {
                       send("SELECT_PLAN", { planName: title });
@@ -187,12 +206,17 @@ const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
                   key={addon.title}
                   title={addon.title}
                   subtitle={addon.subtitle}
-                  price={addon.price}
+                  price={ConvertPriceLength(
+                    billingType === "Monthly"
+                      ? addon.monthlyPrice
+                      : addon.yearlyPrice,
+                    billingType
+                  )}
                   checked={current.context.stepThree.addOns.includes(
                     addon.title
                   )}
-                  onChange={(title) => {
-                    send("SELECT_ADDON", { addonName: title });
+                  onChange={() => {
+                    send("SELECT_ADDON", { addonName: addon.title });
                   }}
                 />
               );
@@ -206,7 +230,36 @@ const Form = ({ className, onSubmit, setCurrentStep }: FormProps) => {
               subtitle="Double-check everything looks OK before confirming."
             />
             <ConfirmContent>
-              <p>oieanrstoienarsoitenarsoitenasotiearnsd</p>
+              <Container justify="space-between">
+                <div>
+                  <h3>
+                    {planName} ({billingType})
+                  </h3>
+                </div>
+                <div>{planPrice}</div>
+              </Container>
+              <div>
+                {addOns.map((addon) => {
+                  const matchingAddon = addons.addOns.find(
+                    (item) => item.title === addon
+                  );
+
+                  if (!matchingAddon) return null;
+
+                  return (
+                    <AddOnItem
+                      key={addon}
+                      addon={addon}
+                      price={ConvertPriceLength(
+                        billingType === "Monthly"
+                          ? matchingAddon.monthlyPrice
+                          : matchingAddon.yearlyPrice,
+                        billingType
+                      )}
+                    />
+                  );
+                })}
+              </div>
             </ConfirmContent>
           </>
         )}
